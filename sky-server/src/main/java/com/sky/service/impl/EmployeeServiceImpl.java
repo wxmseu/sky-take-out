@@ -9,6 +9,7 @@ import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
+import com.sky.exception.UsernameDuplicateException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -60,6 +62,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public void save(EmployeeDTO employeeDTO){
+        String username = employeeDTO.getUsername();
+        Employee employee1 = employeeMapper.getByUsername(username);
+        if (!Objects.isNull(employee1)){
+            throw new UsernameDuplicateException("用户名重复");
+        }
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
         // 设置默认状态，创建数据库是status有默认值，此处可以省略
