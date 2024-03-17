@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -12,6 +13,7 @@ import com.sky.exception.PasswordErrorException;
 import com.sky.exception.UsernameDuplicateException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
@@ -62,6 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public void save(EmployeeDTO employeeDTO){
+        log.info("service层中当前线程的id是：{}", Thread.currentThread().getId());
         String username = employeeDTO.getUsername();
         Employee employee1 = employeeMapper.getByUsername(username);
         if (!Objects.isNull(employee1)){
@@ -79,8 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(localDateTime);
         // 设置修改人
         // 获取修改人信息
-        employee.setCreateUser(1L);
-        employee.setUpdateUser(1L);
+        Long emp_id = BaseContext.getCurrentId();
+        employee.setCreateUser(emp_id);
+        employee.setUpdateUser(emp_id);
         employeeMapper.save(employee);
     }
 
