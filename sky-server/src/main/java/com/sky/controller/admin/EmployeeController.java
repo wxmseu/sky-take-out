@@ -13,6 +13,7 @@ import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,24 @@ public class EmployeeController {
     public Result startOrStop(@PathVariable Integer status,  Long id){
         log.info("当前禁用的用户id为{}", id);
         employeeService.startOrStop(status, id);
+        return Result.success();
+    }
+
+    @GetMapping("{id}")
+    @ApiOperation("获取员工详细信息")
+    public Result<Employee> employDetail(@PathVariable Integer id) {
+        Employee employee = employeeService.queryEmployeeDetailById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping
+    public Result editEmployInfo(@RequestBody EmployeeDTO employeeDTO){
+        employeeService.editEmployInfo(employeeDTO);
         return Result.success();
     }
 
