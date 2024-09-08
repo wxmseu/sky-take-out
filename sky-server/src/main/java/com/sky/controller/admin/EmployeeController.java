@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.annotation.AdminPermissionCheck;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
@@ -94,6 +95,7 @@ public class EmployeeController {
 
     @PostMapping("/status/{status}")
     @ApiOperation("禁用员工")
+    @AdminPermissionCheck
     public Result startOrStop(@PathVariable Integer status,  Long id){
         log.info("当前禁用的用户id为{}", id);
         employeeService.startOrStop(status, id);
@@ -112,6 +114,9 @@ public class EmployeeController {
      * @param employeeDTO
      * @return
      */
+
+    @AdminPermissionCheck
+    @ApiOperation("修改员工信息")
     @PutMapping
     public Result editEmployInfo(@RequestBody EmployeeDTO employeeDTO){
         employeeService.editEmployInfo(employeeDTO);
