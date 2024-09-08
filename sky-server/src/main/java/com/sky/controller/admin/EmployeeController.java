@@ -90,4 +90,13 @@ public class EmployeeController {
         return Result.success(employeeService.employeeInfo(employeePageQueryDTO));
 
     }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("禁用员工")
+    public Result startOrStop(@PathVariable Integer status,  Long id){
+        log.info("当前禁用的用户id为{}", id);
+        employeeService.startOrStop(status, id);
+        return Result.success();
+    }
+
 }
